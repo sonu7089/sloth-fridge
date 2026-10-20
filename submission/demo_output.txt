@@ -1,0 +1,157 @@
+﻿scanning fridge-01-inside-double-sided-refrigerator.jpg ...
+  19 item(s) in 56s
+    - hot sauce x4 piece [condiment]
+    - mustard x2 container [condiment]
+    - mayo x2 pack [condiment]
+    - yogurt x1 container [pantry_staple]
+    - apple cider vinegar x3 container [pantry_staple]
+    - butter x2 pack [pantry_staple]
+    - chili sauce x3 container [condiment]
+    - chinese mustard x2 pack [condiment]
+    - juice x4 container [beverage]
+    - pickle x1 container [pantry_staple]
+    - steak sauce x3 pack [condiment]
+    - soy sauce x2 container [pantry_staple]
+    - cereal x1 container [pantry_staple]
+    - chip x1 pack [snack]
+    - fruit x1 container [produce]
+    - hot pepper x2 container [pantry_staple]
+    - milk x3 container [dairy]
+    - salad x1 container [produce]
+    - tomato ketchup x1 container [condiment]
+scanning fridge-02-fsis-0017.jpg ...
+  14 item(s) in 41s
+    - bread x1 loaf [pantry_staple]
+    - cheese x1 pack [pantry_staple]
+    - eggs x6 pack [eggs]
+    - cucumber x4 container [produce]
+    - bread slice x1 pack [snack]
+    - juice x1 piece [beverage]
+    - lemon x2 piece [produce]
+    - milk x1 piece [dairy]
+    - corn x2 bunch [produce]
+    - pickle x2 pack [condiment]
+    - pineapple x2 slice [produce]
+    - sliced banana x2 container [produce]
+    - yogurt x1 piece [dairy]
+    - rice x1 pack [pantry_staple]
+scanning fridge-03-fsis-0059.jpg ...
+  16 item(s) in 42s
+    - orange x4 piece [produce]
+    - milk x1 piece [dairy]
+    - orange juice x1 piece [beverage]
+    - yogurt x1 container [dairy]
+    - corn on the cob x2 bunch [produce]
+    - apple x1 piece [produce]
+    - eggs x6 container [pantry_staple]
+    - green beans x2 bunch [produce]
+    - green juice x1 piece [beverage]
+    - pink milk x1 piece [dairy]
+    - bread roll x3 pack [bread]
+    - corn x1 piece [produce]
+    - mayo x1 container [condiment]
+    - broccoli x1 bunch [produce]
+    - cereal x2 pack [pantry_staple]
+    - kiwi x1 piece [produce]
+scanning fridge-04-fsis-0064.jpg ...
+  20 item(s) in 47s
+    - pickle x3 container [condiment]
+    - apple x3 piece [produce]
+    - orange x4 piece [produce]
+    - corn x4 piece [produce]
+    - banana x1 piece [produce]
+    - cheese x1 piece [dairy]
+    - green beans x1 piece [produce]
+    - lime x1 piece [produce]
+    - red and white x1 container [beverage]
+    - eggs x6 piece [eggs]
+    - green olive x1 container [snack]
+    - milk x1 container [beverage]
+    - oat x2 pack [pantry_staple]
+    - avocado x1 piece [produce]
+    - cooky x1 piece [snack]
+    - marshmallow x1 piece [produce]
+    - pasta x1 piece [pantry_staple]
+    - pastry x1 piece [snack]
+    - breadstick x3 piece [snack]
+    - pasta noodles x1 loaf [pantry_staple]
+
+PRODUCE
+  [ ] corn on the cob x2 bunch  (not seen in the latest scan)
+  [ ] cucumber x4 container  (not seen in the latest scan)
+  [ ] lemon x2 piece  (not seen in the latest scan)
+
+MEAT
+  [ ] chicken x1 piece  (out of stock)
+
+DAIRY
+  [ ] butter x2 pack  (out of stock)
+  [ ] pink milk x1 piece  (not seen in the latest scan)
+  [ ] yogurt x2 container  (out of stock)
+
+BREAD
+  [ ] bread x1 loaf  (out of stock)
+
+PANTRY_STAPLE
+  [ ] apple cider vinegar x3 container  (not seen in the latest scan)
+  [ ] coffee x1 container  (out of stock)
+  [ ] olive oil x1 bottle  (out of stock)
+  [ ] rice x1 container  (out of stock)
+
+BEVERAGE
+  [ ] green juice x1 piece  (not seen in the latest scan)
+  [ ] juice x1 piece  (not seen in the latest scan)
+  [ ] orange juice x1 piece  (not seen in the latest scan)
+
+CONDIMENT
+  [ ] hot sauce x4 piece  (not seen in the latest scan)
+  [ ] mustard x2 container  (not seen in the latest scan)
+
+SNACK
+  [ ] bread slice x1 pack  (not seen in the latest scan)
+
+Morning digest
+corn, cucumber, lemon, hot sauce
+fridge smells like a tropical fruit salad
+
+Now a receipt: everything on it gets ticked off and stocked in the pantry.
+    bought milk
+    bought yogurt
+    bought eggs
+    bought cheese
+    bought bread
+    bought banana
+    bought lime
+    bought olive oil
+    bought tomato ketchup
+    bought black pepper
+    bought coffee
+
+Shopping list after the receipt
+PRODUCE
+  [ ] corn on the cob x2 bunch  (not seen in the latest scan)
+  [ ] cucumber x4 container  (not seen in the latest scan)
+  [ ] lemon x2 piece  (not seen in the latest scan)
+
+MEAT
+  [ ] chicken x1 piece  (out of stock)
+
+DAIRY
+  [ ] butter x2 pack  (out of stock)
+  [ ] pink milk x1 piece  (not seen in the latest scan)
+
+PANTRY_STAPLE
+  [ ] apple cider vinegar x3 container  (not seen in the latest scan)
+  [ ] rice x1 container  (out of stock)
+
+BEVERAGE
+  [ ] green juice x1 piece  (not seen in the latest scan)
+  [ ] juice x1 piece  (not seen in the latest scan)
+  [ ] orange juice x1 piece  (not seen in the latest scan)
+
+CONDIMENT
+  [ ] hot sauce x4 piece  (not seen in the latest scan)
+  [ ] mustard x2 container  (not seen in the latest scan)
+
+SNACK
+  [ ] bread slice x1 pack  (not seen in the latest scan)

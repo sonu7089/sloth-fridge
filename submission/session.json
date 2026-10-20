@@ -1,0 +1,191 @@
+{
+  "title": "Building Sloth Fridge: teaching a 3B vision model to stop making things up",
+  "tool_name": "opencode",
+  "curated_data": {
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          { "type": "text", "text": "Hacktoberfest week 3 task: Slow and Steady. Build something with open-source AI at its core that rewards laziness. Give me a few options to build from." }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "I checked the machine first: RTX 4060 with 8 GB VRAM, 32 GB RAM, Python 3.13. Then I gave five options and the user picked the fridge photo to grocery list tool." },
+          {
+            "type": "tool_call",
+            "name": "bash",
+            "input": "nvidia-smi; python --version; node --version",
+            "output": "NVIDIA GeForce RTX 4060, 8192 MiB, CUDA 13.3, Python 3.13.3, Node v24.19.0"
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          { "type": "text", "text": "Fridge Photo to Grocery List. You can use Ollama with qwen2.5vl:3b and qwen2.5:3b." }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "Installed Ollama with winget, pulled qwen2.5vl:3b and qwen2.5:3b, and started writing the package: config, ollama_client, imaging, normalize, store, extractor, planner, digest, cli, ui." }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          { "type": "text", "text": "change example not the model" }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "Understood, staying on qwen2.5vl:3b. So the fix has to live in the prompt and the pipeline." },
+          {
+            "type": "tool_call",
+            "name": "bash",
+            "input": "extract_fridge_items(client, bytes_to_base64(data))",
+            "output": "OllamaError: model did not return usable JSON: { \"items\": [ { \"name\": \"jalapeno jelly\", \"qty\": 1, ... }"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "The model was looping on the same made up item. Before blaming the model I checked my own client code, and I found a real bug: I was forcing format=json on every single request, including plain chat calls. That also explained why an earlier probe seemed to ignore the photo, because my probe had never passed the image at all." },
+          {
+            "type": "tool_call",
+            "name": "edit",
+            "input": "ollama_client.py: payload[\"format\"] = json_schema if json_schema else \"json\"",
+            "output": "changed to: set format only when a schema is given, or when json_mode is requested"
+          },
+          {
+            "type": "tool_call",
+            "name": "bash",
+            "input": "requests.post('/api/chat', json={'model':'qwen2.5vl:3b','messages':[{'role':'user','content':'Describe the shapes and colors in this image in one short sentence.','images':[b64]}]})",
+            "output": "[raw-png-b64] The image contains a red square and a blue circle.\n[raw-jpg-b64] The image contains a red square and a blue circle.\n[orig-jpg-b64] The image features a variety of shapes and colors, including bottles, jars, and containers, arranged in a refrigerator."
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "Images reach the model fine, but plain base64 is required. A data URL prefix gives a 400. Now the real problem: with JSON forced the model loops, and when I dropped JSON it started listing a generic fruit salad that was not in the photo at all." }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "My next idea was tiling. If the model cannot see a small carton in a wide photo, give it small crops. I cut the photo into a 3 by 3 grid of overlapping tiles and asked about each one." },
+          {
+            "type": "tool_call",
+            "name": "bash",
+            "input": "crop_views(payload, grid=3, include_full=True) then chat per tile",
+            "output": "tile r0c0: jalapeno hot saucex2, english muffinx3\ntile r1c0: soy saucex1, kikkoman soy saucex1\ntile r1c1: milkx2, eggsx3\ntile r2c0: hot saucex1, mustardx2\ntile r2c2: mayox2, mustardx3"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "Big improvement, real grounded items. But the model still produced junk like english mint, tea leaf x30 and unpopped popcorn x40. So I built a filter layer in plain Python: reject vague names, reject implausible counts, strip brand names, and merge lookalikes." },
+          {
+            "type": "tool_call",
+            "name": "bash",
+            "input": "is_specific_name checks plus canonicalize_name",
+            "output": "reject: yellow lid, unspecified container, white plastic tub, tea leaf x30\nkeep: hot sauce, milk, soy sauce, mustard, mayo"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "Then one more test changed the whole design. I asked the model the same question in plain English instead of asking for JSON." },
+          {
+            "type": "tool_call",
+            "name": "bash",
+            "input": "chat with prompt 'Name the food items in this picture.' and image attached",
+            "output": "The image shows various food items stored inside a refrigerator. 1. Mustard (French's) 2. Ketchup 3. Hot sauce 4. Various bottles of sauces and dressings 5. Pickles 6. Spices..."
+          },
+          {
+            "type": "tool_call",
+            "name": "bash",
+            "input": "chat with a strict JSON prompt and the same image attached",
+            "output": "{ \"items\": [ { \"name\": \"jalapeno jelly\", ... }, { \"name\": \"jalapeno jelly\", ... } ] }"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "That was the key finding. The same 3B model is grounded and useful in plain English, and degenerate when forced into JSON. So the final pipeline is: cut the photo into tiles, let the vision model describe each tile in plain English, let the text model turn those notes into structured items, vote across tiles, then re-check any item seen only once with a simple yes or no question." }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "tool_call",
+            "name": "bash",
+            "input": "extract_fridge_items with the final pipeline on a real fridge photo",
+            "output": "TOTAL 27.6s\n  juice x4 piece votes=3\n  pickle x2 pack votes=3\n  mayo x4 container votes=3\n  hot sauce x3 container votes=2\n  milk x1 piece votes=2\n  mustard x3 container votes=2\n  soy sauce x2 container votes=2"
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          { "type": "text", "text": "Now the shopping list, the digest, the watch mode, the receipt reading, and a README. Keep the writing simple." }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "Built the rest: SQLite store with scan diffing, staples with restock thresholds, aisle grouping, a two line digest, a use-it-up meal plan, folder watch mode, a Streamlit UI, and receipt reading." },
+          {
+            "type": "tool_call",
+            "name": "bash",
+            "input": "read a generated receipt photo",
+            "output": "whole milk, greek yogurt, free range eggs, cheddar cheese block, sourdough loaf, bananas, lime, olive oil, tomato ketchup, black pepper, coffee beans  (11 of 11 lines read correctly)"
+          },
+          {
+            "type": "tool_call",
+            "name": "bash",
+            "input": "pytest -q",
+            "output": "40 passed"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "Two real bugs came out of testing the receipt flow. Buying milk was still put on the list, because the restock rule only looked at the fridge and not at what you had just bought. Now a bought item is stocked in the pantry. I also fixed the threshold meaning, so a staple is only restocked when the count drops below the number in staples.json." },
+          {
+            "type": "tool_call",
+            "name": "bash",
+            "input": "sloth-fridge receipt receipt.png then sloth-fridge list",
+            "output": "bought milk, yogurt, eggs, cheese, bread, banana, lime, olive oil, tomato ketchup, black pepper, coffee\nShopping list after the receipt now only shows what is still missing"
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          { "type": "text", "text": "Put this in gitrepo and push, and prepare the DEV post." }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          { "type": "text", "text": "Pushed to github.com/sonu7089/sloth-fridge with an MIT licence, a CI workflow that runs the tests and ruff on Python 3.10 to 3.12, and a README written in plain English. The DEV post draft follows the challenge template with the required hf26challenge tag." }
+        ]
+      }
+    ],
+    "metadata": {
+      "tool_name": "opencode",
+      "session_id": "sloth-fridge-week3",
+      "total_messages": 11
+    }
+  }
+}
